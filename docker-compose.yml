@@ -13,10 +13,6 @@ services:
         max-size: "1g"
     environment:
       TZ: "Asia/Taipei"
-    expose:
-      - 5432
-    ports:
-      - "5432:5432"
     env_file: .env
     volumes:
       - ./service_db/initdb.d:/docker-entrypoint-initdb.d:cached
@@ -41,16 +37,10 @@ services:
     restart: always
     command: bash /start.sh
     env_file: .env
-    expose:
-      - 8080
-    ports:
-      - "8080:8080"
     links:
       - db
-    #      - redis
     depends_on:
       - db
-    #      - redis
     volumes:
       - ./service_django/phantom_mask:/app
       - ./service_django/start.sh:/start.sh
