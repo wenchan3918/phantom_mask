@@ -8,9 +8,10 @@ server {
         root /etc/nginx/cert/;
     }
 
-    location / {
-        return 301 https://$host$request_uri;
-    }
+    include /etc/nginx/conf.d/default.locations;
+#    location / {
+#        return 301 https://$host$request_uri;
+#    }
 }
 
 
