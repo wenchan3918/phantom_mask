@@ -2,6 +2,7 @@ import os
 from .database import *
 from .installed_apps import *
 from .rest_framework import *
+
 """
 Django settings for phantom_mask project.
 
@@ -39,7 +40,7 @@ if DEBUG:
     else:
         load_dotenv(dotenv_path=env_path)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', "127.0.0.1,localhost").split(',')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
