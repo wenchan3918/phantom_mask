@@ -1,6 +1,10 @@
 #!/bin/bash
 
+# 提供Local、dev與prod三種環境的容器設定檔
+# 可透過簡單指令引用不同環境的設定檔進行容器操作
+
 :||{
+
 指令範例:
 bash run.sh local up db
 

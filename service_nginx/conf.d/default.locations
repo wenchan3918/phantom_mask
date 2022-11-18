@@ -1,9 +1,6 @@
 root        /usr/share/nginx/html/;
 index       index.html;
 
-location ~ ^/.well-known/ {
-    root /etc/nginx/cert;
-}
 
 location ~ ^/uploads/(.*)$ {
     alias /usr/share/nginx/html/uploads/$1;
@@ -51,11 +48,6 @@ location /doc/ {
     proxy_pass http://django:8080;
     proxy_set_header Host $host;
 }
-#
-#location /accounts/ {
-#    proxy_pass http://django:8080;
-#    proxy_set_header Host $host;
-#}
 
 location /api/ {
     proxy_pass http://django:8080;
