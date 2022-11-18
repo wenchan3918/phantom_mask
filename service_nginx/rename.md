@@ -5,5 +5,5 @@ docker exec -it nginx /bin/sh
 certbot certonly \
 --register-unsafely-without-email \
 --webroot \
---webroot-path=/etc/nginx/cert -d phantom_mask.langgo.app --agree-tos
+--webroot-path=/etc/nginx/cert -d mask.langgo.app --agree-tos
 

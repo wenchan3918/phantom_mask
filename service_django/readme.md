@@ -13,3 +13,8 @@ https://djecrety.ir/
 #create superuser
 python manage.py createsuperuser
 
+#import pharmacies.json and user.json to db
+python manage.py import_data
+
+#clean all data in db
+python manage.py clean_data
