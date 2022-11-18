@@ -1,0 +1,85 @@
+version: '3.0'
+networks:
+  phantom_mask_net:
+
+services:
+  db:
+    image: "postgres:14.0-alpine"
+    container_name: db
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1g"
+    environment:
+      TZ: "Asia/Taipei"
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+    env_file: .env
+    volumes:
+      - ./service_db/initdb.d:/docker-entrypoint-initdb.d:cached
+      - ./service_db/pgdata:/var/lib/postgresql/data:cached
+      #      - ./service_db/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+      #      - ./service_db/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+      - ./log:/log:cached
+
+    command:
+      - "postgres"
+    networks:
+      phantom_mask_net:
+
+  django:
+    image: phantom_mask/api:1.0
+    container_name: django
+    build: ./service_django
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1g"
+    restart: always
+    command: bash /start.sh
+    env_file: .env
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
+    links:
+      - db
+    #      - redis
+    depends_on:
+      - db
+    #      - redis
+    volumes:
+      - ./service_django/phantom_mask:/app
+      - ./service_django/start.sh:/start.sh
+      - ./log:/log
+      - /tmp:/tmp
+    networks:
+      phantom_mask_net:
+
+  nginx:
+    container_name: nginx
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1g"
+    build: ./service_nginx
+    env_file: .env
+    depends_on:
+      - django
+    volumes:
+      - ./log:/log
+      - ./service_nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./service_nginx/letsencrypt:/etc/letsencrypt
+      - ./service_nginx/start.sh:/start.sh
+      - ./service_nginx/conf.d:/etc/nginx/conf.d
+      - ./service_django/phantom_mask/phantom_mask/uploads:/usr/share/nginx/html/uploads
+      - ./service_django/phantom_mask/phantom_mask/static:/usr/share/nginx/html/static
+      - ./log:/usr/share/nginx/html/log
+      - ./service_nginx/certbot:/etc/nginx/cert
+
+    networks:
+      phantom_mask_net:
