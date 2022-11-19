@@ -7,7 +7,7 @@ location ~ ^/uploads/(.*)$ {
     autoindex off;
 }
 
-location ~ ^/static/(.*)$ {
+location  /static/(.*)$ {
     alias /usr/share/nginx/html/static/$1;
     autoindex off;
 }
