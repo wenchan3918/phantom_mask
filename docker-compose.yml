@@ -67,8 +67,8 @@ services:
       - ./service_nginx/letsencrypt:/etc/letsencrypt
       - ./service_nginx/start.sh:/start.sh
       - ./service_nginx/conf.d:/etc/nginx/conf.d
-      - ./service_django/phantom_mask/phantom_mask/uploads:/usr/share/nginx/html/uploads
-      - ./service_django/phantom_mask/phantom_mask/static:/usr/share/nginx/html/static
+      - ./service_django/phantom_mask/uploads:/usr/share/nginx/html/uploads
+      - ./service_django/phantom_mask/static:/usr/share/nginx/html/static
       - ./log:/usr/share/nginx/html/log
       - ./service_nginx/certbot:/etc/nginx/cert
 
