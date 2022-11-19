@@ -529,7 +529,8 @@ class PharmacyViewSet(ViewSetUtils,
         operation_summary='Buy Mask | 購買口罩',
         operation_description='''
         Test Data:
-          ```{
+          ```
+          {
                 "customer_name": "Ada Larson",
                 "items": [
                     {
