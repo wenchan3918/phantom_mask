@@ -12,7 +12,7 @@ class OpeningHourOut(serializers.ModelSerializer):
     class Meta:
         model = OpeningHour
         fields = (
-            'id',
+            # 'id',
             'week',
             'open_at',
             'close_at',

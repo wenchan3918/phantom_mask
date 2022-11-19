@@ -13,8 +13,8 @@ class BasePageNumberPagination(PageNumberPagination):
             previous = ""
 
         return Response({
-            'next': next_link,
-            'previous': previous,
+            'next': next_link.replace("http://", "https://"),
+            'previous': previous.replace("http://", "https://"),
             'count': self.page.paginator.count,
             'results': data,
         })

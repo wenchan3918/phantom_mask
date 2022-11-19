@@ -1,6 +1,5 @@
 from django.apps import apps
 from django.contrib import admin
-from django.contrib.auth.models import Group, User
 from django.http import Http404
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
@@ -12,7 +11,6 @@ from phantom_mask import settings
 
 
 class AdminSite(admin.AdminSite):
-
     @staticmethod
     def have_same_value(a, b):
         try:
@@ -21,23 +19,6 @@ class AdminSite(admin.AdminSite):
                     return True
         except:
             return False
-
-    def save_app_list(self, request):
-        # print("==========print_all_list===========")
-        menu_out = ''
-        for app in self._build_app_dict(request).values():
-            # tmp_apps[app.get('app_label')] = app
-            menu_out += "{'app': '" + app['app_label'] + "',\n"
-            menu_out += "  'hide': False,\n"
-            menu_out += "  'models': [\n"
-            for model in app.get('models'):
-                menu_out += "{'model': '" + model.get('object_name') + "', 'hide': False},\n"
-            menu_out += "]\n"
-            menu_out += "},\n"
-            menu_out += "# ===================\n"
-        f = open("app_list.txt", "w")
-        f.write(menu_out)
-        f.close()
 
     def each_context(self, request):
         context = super().each_context(request)
@@ -96,7 +77,7 @@ class AdminSite(admin.AdminSite):
 
 admin_site = AdminSite(name="admin_site")
 admin_site.enable_nav_sidebar = False
-admin_site.site_header = 'PhantomMask'
+admin_site.site_header = 'Phantom Mask'
 # admin_site.register(User)
 # admin_site.register(Group)
 if settings.SITE_URL is not None:

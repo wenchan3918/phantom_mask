@@ -8,7 +8,7 @@ from pharmacy.models import Mask, Pharmacy, PharmacyMask, Customer, PurchaseHist
 
 # python manage.py clear_all_data
 class Command(BaseCommand):
-    help = 'Clears the database.'
+    help = 'Clear the database.'
 
     def handle(self, *args, **options):
         PurchaseHistory.objects.all().delete()

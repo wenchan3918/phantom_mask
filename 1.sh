@@ -1,4 +1,5 @@
 #!/bin/zsh
+# start db in local
 
 source venv/bin/activate
-docker-compose up db
+bash run.sh local up db

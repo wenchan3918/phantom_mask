@@ -19,8 +19,6 @@ class MaskOut(FilterMixin,
         label='Sale total transaction amount | 販售總金額')
     sale_history = serializers.SerializerMethodField(label='Purchase history | 購買紀錄')
 
-    # PurchaseH =serializers.SerializerMethodField()
-
     class Meta:
         model = Mask
         fields = (
@@ -66,12 +64,14 @@ class MaskOut(FilterMixin,
 
         if max_price:
             queryset = queryset.filter(price__lte=max_price)
+
         return queryset
 
     def _get_purchase_history_queryset(self, mask):
         request = self.context.get('request')
         start_date = self._get_start_date(request)
         end_date = self._get_end_date(request)
+
         queryset = PurchaseHistory.objects.filter(pharmacy_mask__mask=mask)
 
         if start_date:

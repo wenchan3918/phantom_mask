@@ -7,9 +7,3 @@ services:
     ports:
       - "5432:5432"
 
-  django:
-    expose:
-      - 8080
-    ports:
-      - "8080:8080"
-

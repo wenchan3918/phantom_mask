@@ -140,7 +140,6 @@ class PharmacyViewSet(ViewSetUtils,
         ],
         responses={200: openapi.Response('ok', PharmacyOut(many=True))})
     def list(self, request, *args, **kwargs):
-        print("====list")
         """
         List all pharmacies open at a specific time and on a day of the week if requested.
         如果需要，列出在特定時間和一周中的某一天營業的所有藥房。 -ok
@@ -197,8 +196,6 @@ class PharmacyViewSet(ViewSetUtils,
             queryset = queryset.filter(name__contains=name)
             queryset = queryset.annotate(rank=SearchRank(vector, query)).order_by('-rank')
 
-        # if week or open_at:
-        #     queryset = queryset.order_by('week', 'open_at')
 
         return self.response_have_page(queryset=queryset,
                                        serializer=PharmacyOut,
@@ -316,10 +313,10 @@ class PharmacyViewSet(ViewSetUtils,
     def mask_search(self, request, *args, **kwargs):
         """
         List all masks sold by a given pharmacy, sorted by mask name or price.
-        列出給定藥房銷售的所有口罩，按口罩名稱或價格排序。 -ok
+        列出給定藥房銷售的所有口罩，按口罩名稱或價格排序。
 
         The total number of masks and dollar value of transactions within a date range.
-        某個日期範圍內交易的口罩總數和美元價值。 -ok
+        某個日期範圍內交易的口罩總數和美元價值。
         """
 
         pharmacy_id = self._get_pharmacy_id(request)
@@ -328,7 +325,7 @@ class PharmacyViewSet(ViewSetUtils,
         start_date = self._get_start_date(request)
         end_date = self._get_end_date(request)
         ordering = self._get_ordering(request, 'price')
-        is_desc = self._get_is_desc(request, False)
+        is_desc = self._get_is_desc(request)
 
         pharmacy_mask_queryset = PharmacyMask.objects
         purchase_history_queryset = PurchaseHistory.objects
@@ -425,7 +422,7 @@ class PharmacyViewSet(ViewSetUtils,
     def customer_search(self, request, *args, **kwargs):
         """
         The top x users by total transaction amount of masks within a date range.
-        按某個日期範圍內的口罩總交易金額排名前 x 的使用者。
+        按某個日期範圍內的口罩總交易金額排名前 x 的顧客。
         """
         start_date = self._get_start_date(request)
         end_date = self._get_end_date(request)
@@ -469,7 +466,7 @@ class PharmacyViewSet(ViewSetUtils,
         operation_summary='Buy Mask | 購買口罩',
         operation_description=utils.text2hmtl('''
         Test Data:
-          {
+          ```{
                 "items": [
                   {
                     "mask_product_id": 281,
@@ -482,7 +479,7 @@ class PharmacyViewSet(ViewSetUtils,
                     "customer_name": "Ada Larson"
                   }
                 ]
-        }
+        }```
     '''),
         manual_parameters=[
         ],

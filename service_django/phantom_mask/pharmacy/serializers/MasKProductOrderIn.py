@@ -46,9 +46,3 @@ class MaskProductOrderIn(serializers.ModelSerializer):
                 pharmacy_mask.pharmacy.cash_balance = round(
                     pharmacy_mask.pharmacy.cash_balance + order.transaction_amount, 2)
                 pharmacy_mask.pharmacy.save()
-
-    # num -= self.validated_data['num']
-    # self.phantom_mask.save()
-    #
-    # self.customer.total_transaction_amount += self.phantom_mask.price * self.validated_data['num']
-    # self.customer.save()

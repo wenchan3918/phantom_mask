@@ -31,7 +31,9 @@ class PharmacyOut(FilterMixin,
         week = self._get_week(request)
         open_at = self._get_open_at(request)
         close_at = self._get_close_at(request)
+
         queryset = OpeningHour.objects.filter(pharmacy=obj)
+
         if week:
             queryset = queryset.filter(week=week)
 

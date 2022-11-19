@@ -8,6 +8,7 @@
 指令範例:
 bash run.sh local up db
 
+
 bash run.sh dev up -d
 bash run.sh dev restart
 
@@ -34,6 +35,7 @@ echo $dc_args;
 
 if [ $mode == 'local' ];then
   docker-compose \
+  -f "${current_path}/docker-compose.yml" \
   -f "${current_path}/docker-compose-${mode}.yml" \
   $dc_args
 
