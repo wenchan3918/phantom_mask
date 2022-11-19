@@ -4,9 +4,10 @@ from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
 from pharmacy.mixins.FilterMixin import FilterMixin
-from pharmacy.models import Pharmacy, OpeningHour, PharmacyMask
+from pharmacy.models import Pharmacy, OpeningHour, PharmacyMask, PurchaseHistory
 from pharmacy.serializers.MasKProductOut import MaskProductOut
 from pharmacy.serializers.OpeningHourOut import OpeningHourOut
+from pharmacy.serializers.PurchaseHistoryOut import PurchaseHistoryOut
 
 
 class PharmacyOut(FilterMixin,
@@ -14,6 +15,7 @@ class PharmacyOut(FilterMixin,
                   serializers.ModelSerializer):
     opening_hours = serializers.SerializerMethodField(label='Opening Hours | 營業與休息時間')
     mask_products = serializers.SerializerMethodField(label='Mask products | 販售的口罩產品')
+    sales_history = serializers.SerializerMethodField(label='Sales history | 銷售紀錄')
 
     class Meta:
         model = Pharmacy
@@ -23,6 +25,7 @@ class PharmacyOut(FilterMixin,
             'cash_balance',
             'opening_hours',
             'mask_products',
+            'sales_history',
         )
 
     @swagger_serializer_method(serializer_or_field=OpeningHourOut(many=True))
@@ -51,6 +54,7 @@ class PharmacyOut(FilterMixin,
         mask_name = self._get_mask_name(request)
         min_price = self._get_min_price(request)
         max_price = self._get_max_price(request)
+        is_desc = self._get_is_desc(request)
 
         queryset = PharmacyMask.objects.filter(pharmacy=obj)
 
@@ -63,4 +67,23 @@ class PharmacyOut(FilterMixin,
         if mask_name:
             queryset = queryset.filter(mask__name__contains=mask_name)
 
+        queryset = queryset.order_by('-price' if is_desc else 'price')
+
+        # print("=get_mask_products=", queryset.query)
         return MaskProductOut(queryset, many=True).data
+
+    @swagger_serializer_method(serializer_or_field=PurchaseHistoryOut(many=True))
+    def get_sales_history(self, obj):
+        request = self.context.get('request')
+        ordering = self._get_ordering(request, 'price')
+        is_desc = self._get_is_desc(request)
+
+        queryset = PurchaseHistory.objects.filter(pharmacy_mask__pharmacy=obj)
+
+        if ordering == 'price':
+            queryset = queryset.order_by('-transaction_amount' if is_desc else 'transaction_amount')
+        else:
+            queryset = queryset.order_by('-pharmacy_mask__mask__name' if is_desc else 'pharmacy_mask__mask__name')
+
+        # print('=get_sales_history', queryset.query)
+        return PurchaseHistoryOut(queryset, many=True).data

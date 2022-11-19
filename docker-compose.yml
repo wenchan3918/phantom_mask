@@ -46,6 +46,7 @@ services:
       - ./service_django/start.sh:/start.sh
       - ./log:/log
       - /tmp:/tmp
+      - ./service_django/phantom_mask/silky_logs:/app/silky_logs
     networks:
       phantom_mask_net:
 
@@ -70,6 +71,7 @@ services:
       - ./service_django/phantom_mask/phantom_mask/static:/usr/share/nginx/html/static
       - ./log:/usr/share/nginx/html/log
       - ./service_nginx/certbot:/etc/nginx/cert
+
 
     networks:
       phantom_mask_net:

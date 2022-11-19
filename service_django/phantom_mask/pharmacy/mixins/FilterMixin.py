@@ -61,8 +61,8 @@ class FilterMixin(object):
     def _get_ordering(self, request, default=None):
         return request.GET.get('ordering', default)
 
-    def _get_is_desc(self, request, default=False):
-        return request.GET.get('is_desc', default)
+    def _get_is_desc(self, request):
+        return request.GET.get('is_desc', 'false') in ['true', 'True', '1']
 
     def _get_min_price(self, request, default=None):
         try:
@@ -72,6 +72,6 @@ class FilterMixin(object):
 
     def _get_max_price(self, request, default=None):
         try:
-            return int(request.GET.get('min_price', default))
+            return int(request.GET.get('max_price', default))
         except:
             return None

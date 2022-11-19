@@ -55,7 +55,7 @@ class CustomerAdmin(ModelAdmin):
             content = f'''<li>{history.pharmacy_mask.pharmacy.name}, 
                               {history.pharmacy_mask.mask.name}
                               [<b>mask_product_id: {history.pharmacy_mask.id}, price: ${history.transaction_amount}</b>],  
-                              {history.transaction_date}</li>'''
+                              {history.transaction_date.strftime("%Y-%m-%d %H:%M:%S")}</li>'''
             history_items.append(content)
         return mark_safe(f'<ol>{"".join(history_items)}</ol>')
 

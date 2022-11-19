@@ -58,15 +58,22 @@ class Command(BaseCommand):
     def insert_pharmacy_mask(self, pharmacies):
         for _pharmacy in pharmacies:
             for mask in _pharmacy['masks']:
-                pharmacy_mask, created = PharmacyMask.objects.get_or_create(
-                    pharmacy=Pharmacy.objects.get(name=_pharmacy['name']),
-                    mask=Mask.objects.get(name=mask['name']),
-                    number_of_sales=1,
-                )
+                # pharmacy_mask, created = PharmacyMask.objects.get_or_create(
+                #     pharmacy=Pharmacy.objects.get(name=_pharmacy['name']),
+                #     mask=Mask.objects.get(name=mask['name']),
+                #     number_of_sales=1,
+                # )
+                # pharmacy_mask.price = mask['price']
+                # print(f'pharmacy: {pharmacy_mask.pharmacy.name}, mask: {pharmacy_mask.mask.name}, created: {created}')
+
+                pharmacy_mask = PharmacyMask()
+                pharmacy_mask.pharmacy = Pharmacy.objects.get(name=_pharmacy['name'])
+                pharmacy_mask.mask = Mask.objects.get(name=mask['name'])
+                pharmacy_mask.number_of_sales = 1
                 pharmacy_mask.price = mask['price']
                 pharmacy_mask.save()
 
-            print(f'pharmacy: {pharmacy_mask.pharmacy.name}, mask: {pharmacy_mask.mask.name}, created: {created}')
+                print(f'pharmacy: {pharmacy_mask.id}, {pharmacy_mask.pharmacy.name}, mask: {pharmacy_mask.mask.name}')
 
     def insert_customer(self, users):
         for item in users:

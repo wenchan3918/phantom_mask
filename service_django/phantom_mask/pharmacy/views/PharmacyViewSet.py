@@ -123,6 +123,32 @@ class PharmacyViewSet(ViewSetUtils,
                 type=openapi.TYPE_NUMBER,
             ),
             openapi.Parameter(
+                name='ordering',
+                in_=openapi.IN_QUERY,
+                description='Order field | 指定排序欄位',
+                format='string',
+                enum=[
+                    "price",
+                    "name",
+                ],
+                default="price",
+                required=False,
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                name='is_desc',
+                in_=openapi.IN_QUERY,
+                description='Order field use desc sort | 排序欄位是否以降序排列',
+                format='boolean',
+                enum=[
+                    "true",
+                    "false",
+                ],
+                default="true",
+                required=False,
+                type=openapi.TYPE_BOOLEAN,
+            ),
+            openapi.Parameter(
                 name='fields',
                 in_=openapi.IN_QUERY,
                 description='Display fields | 顯示欄位',
@@ -131,10 +157,11 @@ class PharmacyViewSet(ViewSetUtils,
                     "id,name,cash_balance",
                     "id,name,cash_balance,opening_hours",
                     "id,name,cash_balance,opening_hours,mask_products",
+                    "id,name,cash_balance,opening_hours,mask_products,sales_history",
                 ],
                 format='string',
                 type=openapi.TYPE_STRING,
-                default="id,name,cash_balance,opening_hours,mask_products",
+                default="id,name,cash_balance,opening_hours,mask_products,sales_history",
                 required=False,
             ),
         ],
@@ -157,6 +184,7 @@ class PharmacyViewSet(ViewSetUtils,
         mask_name = self._get_mask_name(request)
         min_price = self._get_min_price(request)
         max_price = self._get_max_price(request)
+
         # print("====week", week)
 
         queryset = Pharmacy.objects.filter()
@@ -195,7 +223,6 @@ class PharmacyViewSet(ViewSetUtils,
             query = SearchQuery(name)
             queryset = queryset.filter(name__contains=name)
             queryset = queryset.annotate(rank=SearchRank(vector, query)).order_by('-rank')
-
 
         return self.response_have_page(queryset=queryset,
                                        serializer=PharmacyOut,
@@ -253,6 +280,7 @@ class PharmacyViewSet(ViewSetUtils,
                 format='string',
                 enum=[
                     "price",
+                    "sale_total_amount",
                     "name",
                 ],
                 default="price",
@@ -299,7 +327,7 @@ class PharmacyViewSet(ViewSetUtils,
                     "name,sale_pharmacies",
                     "name,sale_pharmacies,sale_total_amount",
                     "name,sale_pharmacies,sale_total_amount,sale_total_transaction_amount",
-                    "name,sale_pharmacies,sale_total_amount,sale_total_transaction_amount,sale_history",
+                    "name,sale_pharmacies,sale_total_amount,sale_total_transaction_amount,purchase_history",
 
                 ],
                 format='string',
@@ -356,6 +384,8 @@ class PharmacyViewSet(ViewSetUtils,
 
         if ordering == 'price':
             queryset = queryset.order_by('-mark_price' if is_desc else 'mark_price')
+        elif ordering == 'sale_total_amount':
+            queryset = queryset.order_by('-sale_total_amount' if is_desc else 'sale_total_amount')
         else:
             queryset = queryset.order_by('-mark_name' if is_desc else 'mark_name')
 
@@ -403,6 +433,32 @@ class PharmacyViewSet(ViewSetUtils,
                 type=openapi.TYPE_STRING,
             ),
             openapi.Parameter(
+                name='ordering',
+                in_=openapi.IN_QUERY,
+                description='Order field | 指定排序欄位',
+                format='string',
+                enum=[
+                    "total_transaction_amount",
+                    "name",
+                ],
+                default="price",
+                required=False,
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                name='is_desc',
+                in_=openapi.IN_QUERY,
+                description='Order field use desc sort | 排序欄位是否以降序排列',
+                format='boolean',
+                enum=[
+                    "true",
+                    "false",
+                ],
+                default="true",
+                required=False,
+                type=openapi.TYPE_BOOLEAN,
+            ),
+            openapi.Parameter(
                 name='fields',
                 in_=openapi.IN_QUERY,
                 description='Display fields | 顯示欄位',
@@ -427,6 +483,8 @@ class PharmacyViewSet(ViewSetUtils,
         start_date = self._get_start_date(request)
         end_date = self._get_end_date(request)
         name = self._get_name(request)
+        ordering = self._get_ordering(request, 'total_transaction_amount')
+        is_desc = self._get_is_desc(request)
 
         queryset = Customer.objects.filter()
         purchase_history_queryset = PurchaseHistory.objects.filter(customer=OuterRef('pk'))
@@ -452,6 +510,11 @@ class PharmacyViewSet(ViewSetUtils,
             queryset = queryset.filter(name__contains=name)
             queryset = queryset.annotate(rank=SearchRank(vector, query)).order_by('-rank')
 
+        if ordering == 'total_transaction_amount':
+            queryset = queryset.order_by('-total_transaction_amount' if is_desc else 'total_transaction_amount')
+        else:
+            queryset = queryset.order_by('-name' if is_desc else 'name')
+
         # for r in queryset:
         #     print(r.total_transaction_amount)
 
@@ -464,23 +527,22 @@ class PharmacyViewSet(ViewSetUtils,
     @swagger_auto_schema(
         tags=['Pharmacy'],
         operation_summary='Buy Mask | 購買口罩',
-        operation_description=utils.text2hmtl('''
+        operation_description='''
         Test Data:
           ```{
+                "customer_name": "Ada Larson",
                 "items": [
-                  {
-                    "mask_product_id": 281,
-                    "num": 1,
-                    "customer_name": "Ada Larson"
-                  },
-                  {
-                    "mask_product_id": 192,
-                    "num": 10,
-                    "customer_name": "Ada Larson"
-                  }
+                    {
+                        "mask_product_id": 1,
+                        "num": 1  
+                    },
+                    {
+                        "mask_product_id": 2,
+                        "num": 1
+                    }
                 ]
-        }```
-    '''),
+            }
+    ''',
         manual_parameters=[
         ],
         request_body=MaskProductOrderIn(many=True),

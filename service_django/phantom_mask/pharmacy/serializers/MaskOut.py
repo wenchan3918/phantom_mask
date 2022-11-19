@@ -17,7 +17,7 @@ class MaskOut(FilterMixin,
     sale_total_amount = serializers.SerializerMethodField(label='Sale total amount | 販售總數量')
     sale_total_transaction_amount = serializers.SerializerMethodField(
         label='Sale total transaction amount | 販售總金額')
-    sale_history = serializers.SerializerMethodField(label='Purchase history | 購買紀錄')
+    purchase_history = serializers.SerializerMethodField(label='Purchase history | 購買紀錄')
 
     class Meta:
         model = Mask
@@ -26,7 +26,7 @@ class MaskOut(FilterMixin,
             'sale_pharmacies',
             'sale_total_amount',
             'sale_total_transaction_amount',
-            'sale_history',
+            'purchase_history',
         )
 
     def get_sale_total_amount(self, mask):
@@ -40,7 +40,7 @@ class MaskOut(FilterMixin,
             return 0
 
     @swagger_serializer_method(serializer_or_field=PurchaseHistoryOut(many=True))
-    def get_sale_history(self, mask):
+    def get_purchase_history(self, mask):
         queryset = self._get_purchase_history_queryset(mask)
         return PurchaseHistoryOut(queryset, many=True).data
 

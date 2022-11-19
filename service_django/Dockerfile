@@ -1,4 +1,3 @@
-#FROM python:3.6-slim-stretch
 FROM python:3.9-slim-buster
 
 RUN set -ex && mkdir /app

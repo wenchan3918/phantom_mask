@@ -1,4 +1,5 @@
 INSTALLED_APPS = [
+
     'django_light',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -14,6 +15,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'rest_framework_swagger',
+    'silk',
 
     'pharmacy',
 ]
