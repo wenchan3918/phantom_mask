@@ -102,13 +102,14 @@ class Command(BaseCommand):
         for item in opening_hours.split('/'):
             cols = item.strip().split(' ')  # [::-1]
             # tmp = cols
-            weeks = []  # [1, 2, 3, 4, 5, 6, 7]
-            open_and_close_time = []  # [open_at, close_at]
-            open_and_close_time.append(cols.pop())
+
+            open_and_close_hours = []  # [open_at, close_at]
+            open_and_close_hours.append(cols.pop())
             cols.pop()
-            open_and_close_time.append(cols.pop())
+            open_and_close_hours.append(cols.pop())
             # open_and_close_time = sorted(open_and_close_time)
 
+            weeks = []  # [1, 2, 3, 4, 5, 6, 7]
             if '-' in cols:  # 解析連續， ['Mon', '-', 'Fri', '08:00', '-', '17:00']
                 for week_id in range(SHORT_WEEK_DICT[cols[0]], 1 + SHORT_WEEK_DICT[cols[-1]]):
                     weeks.append(week_id)
@@ -118,7 +119,7 @@ class Command(BaseCommand):
 
             # print(open_and_close_time, weeks, tmp)
 
-            return weeks, open_and_close_time
+            return weeks, open_and_close_hours
 
     def print_opening_hours(self, pharmacies):
         for pharmacy in pharmacies:
