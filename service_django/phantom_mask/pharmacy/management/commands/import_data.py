@@ -107,7 +107,7 @@ class Command(BaseCommand):
             open_and_close_time.append(cols.pop())
             cols.pop()
             open_and_close_time.append(cols.pop())
-            open_and_close_time = sorted(open_and_close_time)
+            # open_and_close_time = sorted(open_and_close_time)
 
             if '-' in cols:  # 解析連續， ['Mon', '-', 'Fri', '08:00', '-', '17:00']
                 for week_id in range(SHORT_WEEK_DICT[cols[0]], 1 + SHORT_WEEK_DICT[cols[-1]]):
@@ -122,6 +122,7 @@ class Command(BaseCommand):
 
     def print_opening_hours(self, pharmacies):
         for pharmacy in pharmacies:
+            # print(pharmacy['openingHours'])
             weeks, open_and_close_time = self.parse_weeks_and_times(pharmacy['openingHours'])
             print(weeks, open_and_close_time)
 

@@ -8,11 +8,9 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 
 from phantom_mask.ViewSetUtils import ViewSetUtils
-from pharmacy import utils
-
 from pharmacy.mixins.FilterMixin import FilterMixin
-from pharmacy.models.Pharmacy import Pharmacy
 from pharmacy.models import Mask, Customer, PurchaseHistory, PharmacyMask, OpeningHour
+from pharmacy.models.Pharmacy import Pharmacy
 from pharmacy.serializers.CustomerOut import CustomerOut
 from pharmacy.serializers.MasKProductOrderIn import MaskProductOrderIn
 from pharmacy.serializers.MaskOut import MaskOut
