@@ -26,8 +26,7 @@ def parse_weeks_and_times(opening_hours):
         results.append((weeks, open_and_close_hours))
 
     return results
-修正解析營業時間少取得最後一個
-fix: parse opening hours missing last item
+
 rows = """
 Mon, Wed, Fri 08:00 - 12:00 / Tue, Thur 14:00 - 18:00
 Mon - Fri 08:00 - 17:00
