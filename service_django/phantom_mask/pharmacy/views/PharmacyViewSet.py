@@ -15,6 +15,8 @@ from pharmacy.serializers.CustomerOut import CustomerOut
 from pharmacy.serializers.MasKProductOrderIn import MaskProductOrderIn
 from pharmacy.serializers.MaskOut import MaskOut
 from pharmacy.serializers.PharmacyOut import PharmacyOut
+from pharmacy.views.PharmacyViewSetParameter import LIST_MANUAL_PARAMETERS, MARK_SEARCH_MANUAL_PARAMETERS, \
+    CUSTOMER_SEARCH_MANUAL_PARAMETERS
 
 
 class PharmacyViewSet(ViewSetUtils,
@@ -30,139 +32,7 @@ class PharmacyViewSet(ViewSetUtils,
         operation_summary='Search Pharmacy | 搜尋藥局',
         operation_description=f'''
           ''',
-        manual_parameters=[
-            openapi.Parameter(
-                name='week',
-                in_=openapi.IN_QUERY,
-                description="Week | 營業週。{'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thur': 4, 'Fri': 5, 'Sat': 6, 'Sun': 7}",
-                enum=[1, 2, 3, 4, 5, 6, 7],
-                default=1,
-                format='int64',
-                type=openapi.TYPE_STRING,
-                required=False,
-            ),
-            openapi.Parameter(
-                name='open_at',
-                in_=openapi.IN_QUERY,
-                description="Open at | 開始營業時間",
-                enum=[
-                    '02:00',
-                    '08:00',
-                    '14:00',
-                ],
-                format='time',
-                type=openapi.TYPE_STRING,
-                required=False,
-            ),
-            openapi.Parameter(
-                name='close_at',
-                in_=openapi.IN_QUERY,
-                description="Close at | 結束營業時間",
-                enum=[
-                    '18:00',
-                    '19:00',
-                    '20:00',
-                ],
-                format='time',
-                type=openapi.TYPE_STRING,
-                required=False,
-            ),
-            openapi.Parameter(
-                name='name',
-                in_=openapi.IN_QUERY,
-                description='Pharmacy Name | 藥局名稱。模糊搜尋',
-                enum=[
-                    'point',
-                    'Care',
-                    'Health',
-                ],
-                format='string',
-                required=False,
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                name='mask_name',
-                in_=openapi.IN_QUERY,
-                description='Mask Name | 口罩名稱 。模糊搜尋',
-                enum=[
-                    'Masquerade',
-                    'True Barrier',
-                    'Cotton Kiss',
-                ],
-                format='string',
-                required=False,
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                name='min_price',
-                in_=openapi.IN_QUERY,
-                description='Min sale price | 篩選高於於此銷售價格',
-                format='int64',
-                enum=[
-                    5,
-                    10,
-                    30,
-                ],
-                required=False,
-                type=openapi.TYPE_NUMBER,
-            ),
-
-            openapi.Parameter(
-                name='max_price',
-                in_=openapi.IN_QUERY,
-                description='Max sale price | 篩選低於此銷售價格',
-                format='int64',
-                enum=[
-                    40,
-                    60,
-                    80,
-                ],
-                required=False,
-                type=openapi.TYPE_NUMBER,
-            ),
-            openapi.Parameter(
-                name='ordering',
-                in_=openapi.IN_QUERY,
-                description='Order field | 指定排序欄位',
-                format='string',
-                enum=[
-                    "price",
-                    "name",
-                ],
-                default="price",
-                required=False,
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                name='is_desc',
-                in_=openapi.IN_QUERY,
-                description='Order field use desc sort | 排序欄位是否以降序排列',
-                format='boolean',
-                enum=[
-                    "true",
-                    "false",
-                ],
-                default="true",
-                required=False,
-                type=openapi.TYPE_BOOLEAN,
-            ),
-            openapi.Parameter(
-                name='fields',
-                in_=openapi.IN_QUERY,
-                description='Display fields | 顯示欄位',
-                enum=[
-                    "id,name",
-                    "id,name,cash_balance",
-                    "id,name,cash_balance,opening_hours",
-                    "id,name,cash_balance,opening_hours,mask_products",
-                    "id,name,cash_balance,opening_hours,mask_products,sales_history",
-                ],
-                format='string',
-                type=openapi.TYPE_STRING,
-                default="id,name,cash_balance,opening_hours,mask_products,sales_history",
-                required=False,
-            ),
-        ],
+        manual_parameters=LIST_MANUAL_PARAMETERS,
         responses={200: openapi.Response('ok', PharmacyOut(many=True))})
     def list(self, request, *args, **kwargs):
         """
@@ -183,8 +53,6 @@ class PharmacyViewSet(ViewSetUtils,
         min_price = self.get_min_price(request)
         max_price = self.get_max_price(request)
 
-        # print("====week", week)
-
         queryset = Pharmacy.objects.filter()
         pharmacy_mask_queryset = PharmacyMask.objects.filter()
         opening_hour_queryset = OpeningHour.objects.filter(pharmacy=OuterRef('pk')).order_by('week', 'open_at')
@@ -196,6 +64,7 @@ class PharmacyViewSet(ViewSetUtils,
             opening_hour_queryset = opening_hour_queryset.filter(open_at__gte=open_at)
 
         if close_at:
+            # TODO 需修正跨夜間時間，例如 營業時間為20:00 ~ 02:00，則需能查詢到 22:00 ~ 01:00 的資料
             opening_hour_queryset = opening_hour_queryset.filter(close_at__lte=close_at)
 
         if week or open_at or close_at:
@@ -217,6 +86,7 @@ class PharmacyViewSet(ViewSetUtils,
 
         # 以商店名稱作為搜索詞進行搜尋，並的相關性排名。
         if name:
+            # TODO 需驗證rank的計算方式與SearchVector用法
             vector = SearchVector('name')
             query = SearchQuery(name)
             queryset = queryset.filter(name__contains=name)
@@ -231,109 +101,7 @@ class PharmacyViewSet(ViewSetUtils,
         operation_summary='Search Mask | 搜尋口罩',
         operation_description=f'''
           ''',
-        manual_parameters=[
-            openapi.Parameter(
-                name='pharmacy_id',
-                in_=openapi.IN_QUERY,
-                description='Pharmacy ID | 藥局 ID。 Get from `/pharmacy/` API',
-                format='int64',
-                enum=[
-                    41,
-                    51,
-                    57,
-                ],
-                required=False,
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                name='min_price',
-                in_=openapi.IN_QUERY,
-                description='Min sale price | 搜尋價格高於此銷售價格',
-                format='int64',
-                enum=[
-                    5,
-                    10,
-                    30,
-                ],
-                required=False,
-                type=openapi.TYPE_NUMBER,
-            ),
-            openapi.Parameter(
-                name='max_price',
-                in_=openapi.IN_QUERY,
-                description='Max sale price | 搜尋價格低於此銷售價格',
-                format='int64',
-                enum=[
-                    40,
-                    60,
-                    80,
-                ],
-                required=False,
-                type=openapi.TYPE_NUMBER,
-            ),
-            openapi.Parameter(
-                name='ordering',
-                in_=openapi.IN_QUERY,
-                description='Order field | 指定排序欄位',
-                format='string',
-                enum=[
-                    "price",
-                    "sale_total_amount",
-                    "name",
-                ],
-                default="price",
-                required=False,
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                name='is_desc',
-                in_=openapi.IN_QUERY,
-                description='Order field use desc sort | 排序欄位是否以降序排列',
-                format='boolean',
-                enum=[
-                    "true",
-                    "false",
-                ],
-                default="true",
-                required=False,
-                type=openapi.TYPE_BOOLEAN,
-            ),
-            openapi.Parameter(
-                name='start_date',
-                in_=openapi.IN_QUERY,
-                description='Start date | 搜尋開始日期。Format: YYYY-MM-DD',
-                default='2021-01-11',
-                format='date',
-                type=openapi.TYPE_STRING,
-                required=False,
-            ),
-            openapi.Parameter(
-                name='end_date',
-                in_=openapi.IN_QUERY,
-                description='End date | 搜尋結束日期。Format: YYYY-MM-DD',
-                default='2021-01-12',
-                format='date',
-                type=openapi.TYPE_STRING,
-                required=False,
-            ),
-            openapi.Parameter(
-                name='fields',
-                in_=openapi.IN_QUERY,
-                description='Display fields | 顯示欄位',
-                enum=[
-                    "name",
-                    "name,sale_pharmacies",
-                    "name,sale_pharmacies,sale_total_amount",
-                    "name,sale_pharmacies,sale_total_amount,sale_total_transaction_amount",
-                    "name,sale_pharmacies,sale_total_amount,sale_total_transaction_amount,purchase_history",
-
-                ],
-                format='string',
-                type=openapi.TYPE_STRING,
-                default="name,sale_pharmacies,sale_total_amount",
-                required=False,
-            ),
-        ],
+        manual_parameters=MARK_SEARCH_MANUAL_PARAMETERS,
         responses={200: openapi.Response('ok', MaskOut(many=True))})
     @action(methods=['GET'], detail=False, url_path='mask')
     def mask_search(self, request, *args, **kwargs):
@@ -398,79 +166,7 @@ class PharmacyViewSet(ViewSetUtils,
         operation_summary='Search Customer | 搜尋顧客',
         operation_description=f'''
           ''',
-        manual_parameters=[
-            openapi.Parameter(
-                name='start_date',
-                in_=openapi.IN_QUERY,
-                description='Start date | 搜尋開始日期。Format: YYYY-MM-DD',
-                default='2021-01-11',
-                format='date',
-                type=openapi.TYPE_STRING,
-                required=False,
-            ),
-            openapi.Parameter(
-                name='end_date',
-                in_=openapi.IN_QUERY,
-                description='End date | 搜尋結束日期。Format: YYYY-MM-DD',
-                default='2021-01-12',
-                format='date',
-                type=openapi.TYPE_STRING,
-                required=False,
-            ),
-            openapi.Parameter(
-                name='name',
-                in_=openapi.IN_QUERY,
-                description='Customer Name | 客戶姓名',
-                enum=[
-                    'Timothy',
-                    'Bush',
-                    'Lester',
-                ],
-                format='string',
-                required=False,
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                name='ordering',
-                in_=openapi.IN_QUERY,
-                description='Order field | 指定排序欄位',
-                format='string',
-                enum=[
-                    "total_transaction_amount",
-                    "name",
-                ],
-                default="price",
-                required=False,
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                name='is_desc',
-                in_=openapi.IN_QUERY,
-                description='Order field use desc sort | 排序欄位是否以降序排列',
-                format='boolean',
-                enum=[
-                    "true",
-                    "false",
-                ],
-                default="true",
-                required=False,
-                type=openapi.TYPE_BOOLEAN,
-            ),
-            openapi.Parameter(
-                name='fields',
-                in_=openapi.IN_QUERY,
-                description='Display fields | 顯示欄位',
-                enum=[
-                    "id,name",
-                    "id,name,total_transaction_amount",
-                    "id,name,total_transaction_amount,purchase_history",
-                ],
-                format='string',
-                type=openapi.TYPE_STRING,
-                default='id,name,total_amount',
-                required=False,
-            ),
-        ],
+        manual_parameters=CUSTOMER_SEARCH_MANUAL_PARAMETERS,
         responses={200: openapi.Response('ok', CustomerOut(many=True))})
     @action(methods=['GET'], detail=False, url_path='customer')
     def customer_search(self, request, *args, **kwargs):
@@ -513,10 +209,6 @@ class PharmacyViewSet(ViewSetUtils,
         else:
             queryset = queryset.order_by('-name' if is_desc else 'name')
 
-        # for r in queryset:
-        #     print(r.total_transaction_amount)
-
-        # return self.response(data=CustomerOut(queryset, many=True,).data)
         return self.response_have_page(queryset=queryset,
                                        serializer=CustomerOut,
                                        request=request,
@@ -527,6 +219,8 @@ class PharmacyViewSet(ViewSetUtils,
         operation_summary='Buy Mask | 購買口罩',
         operation_description='''
         Test Data:
+        mask_product_id can be found in `/admin/pharmacy/pharmacy/`.
+        
           ```
           {
                 "customer_name": "Ada Larson",
@@ -552,7 +246,6 @@ class PharmacyViewSet(ViewSetUtils,
         Process a user purchases a mask from a pharmacy, and handle all relevant data changes in an atomic transaction.
         處理使用者從藥房購買口罩，並處理原子事務中的所有相關數據更改。
         """
-        # print(request.data)
         orders = MaskProductOrderIn(data=request.data)
         orders.is_valid(raise_exception=True)
         orders.create()

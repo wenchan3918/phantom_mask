@@ -51,7 +51,7 @@ class PharmacyAdmin(ModelAdmin):
         'cash_balance_',
         'purchase_history_count_',
         'opening_hours_',
-        'masks_',
+        'mask_products_',
     )
     inlines = [
         OpeningHourInline,
@@ -79,13 +79,14 @@ class PharmacyAdmin(ModelAdmin):
         return mark_safe(f'<ol>{"".join(opening_hours)}</ol>')
 
     @admin.display(description='Masks')
-    def masks_(self, obj):
-        masks = []
+    def mask_products_(self, obj):
+        mask_products = []
 
-        for mask in PharmacyMask.objects.filter(pharmacy=obj).order_by('mask__name'):
-            masks.append(f'<li>{mask.mask.name} - ${mask.price}</li>')
+        for product in PharmacyMask.objects.filter(pharmacy=obj).order_by('mask__name'):
+            mask_products.append(
+                f'<li>{product.mask.name} - ${product.price} - <b>mask_product_id:{product.id}</b></li>')
 
-        return mark_safe(f'<ol>{"".join(masks)}</ol>')
+        return mark_safe(f'<ol>{"".join(mask_products)}</ol>')
 
     def get_queryset(self, request):
         return super().get_queryset(request).order_by('name')
