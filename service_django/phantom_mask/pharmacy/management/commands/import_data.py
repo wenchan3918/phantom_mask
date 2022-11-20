@@ -45,13 +45,13 @@ class Command(BaseCommand):
             pharmacy.save()
 
             OpeningHour.objects.filter(pharmacy_id=pharmacy).delete()
-            weeks, open_and_close_time = self.parse_weeks_and_times(_pharmacy['openingHours'])
-            for week in weeks:
-                opening_hour = OpeningHour(pharmacy=pharmacy,
-                                           open_at=open_and_close_time[0],
-                                           close_at=open_and_close_time[1],
-                                           week=week, )
-                opening_hour.save()
+            for weeks, open_and_close_time in self.parse_weeks_and_times(_pharmacy['openingHours']):
+                for week in weeks:
+                    opening_hour = OpeningHour(pharmacy=pharmacy,
+                                               open_at=open_and_close_time[0],
+                                               close_at=open_and_close_time[1],
+                                               week=week, )
+                    opening_hour.save()
 
             print(f'pharmacy: {pharmacy.name}, created: {created}')
 
@@ -99,6 +99,7 @@ class Command(BaseCommand):
 
     def parse_weeks_and_times(self, opening_hours):
         # 用/符號進行分割 Mon, Wed, Fri 08:00 - 12:00 / Tue, Thur 14:00 - 18:00
+        results = []
         for item in opening_hours.split('/'):
             cols = item.strip().split(' ')  # [::-1]
 
@@ -106,6 +107,7 @@ class Command(BaseCommand):
             open_and_close_hours.append(cols.pop())
             cols.pop()
             open_and_close_hours.append(cols.pop())
+            open_and_close_hours.reverse()
             # open_and_close_hours = sorted(open_and_close_hours)
 
             weeks = []  # [1, 2, 3, 4, 5, 6, 7]
@@ -118,44 +120,35 @@ class Command(BaseCommand):
 
             # print(open_and_close_time, weeks, tmp)
 
-            return weeks, open_and_close_hours
+            results.append((weeks, open_and_close_hours))
+
+        return results
 
     def print_opening_hours(self, pharmacies):
         for pharmacy in pharmacies:
             # print(pharmacy['openingHours'])
-            weeks, open_and_close_time = self.parse_weeks_and_times(pharmacy['openingHours'])
-            print(weeks, open_and_close_time)
+            results = self.parse_weeks_and_times(pharmacy['openingHours'])
+            print(results)
 
         """ results:
-        ['Mon,', 'Wed,', 'Fri', '08:00', '-', '12:00']
-        ['Tue,', 'Thur', '14:00', '-', '18:00']
-        ['Mon', '-', 'Fri', '08:00', '-', '17:00']
-        ['Mon', '-', 'Fri', '08:00', '-', '17:00']
-        ['Mon', '-', 'Fri', '08:00', '-', '17:00']
-        ['Sat,', 'Sun', '08:00', '-', '12:00']
-        ['Mon', '-', 'Fri', '08:00', '-', '17:00']
-        ['Mon', '-', 'Fri', '08:00', '-', '17:00']
-        ['Sat,', 'Sun', '08:00', '-', '12:00']
-        ['Mon', '-', 'Fri', '08:00', '-', '17:00']
-        ['Sat,', 'Sun', '08:00', '-', '12:00']
-        ['Fri', '-', 'Sun', '20:00', '-', '02:00']
-        ['Mon,', 'Wed,', 'Fri', '08:00', '-', '12:00']
-        ['Tue,', 'Thur', '14:00', '-', '18:00']
-        ['Mon,', 'Wed,', 'Fri', '08:00', '-', '12:00']
-        ['Tue,', 'Thur', '14:00', '-', '18:00']
-        ['Mon', '-', 'Fri', '08:00', '-', '17:00']
-        ['Sat,', 'Sun', '08:00', '-', '12:00']
-        ['Mon', '-', 'Wed', '08:00', '-', '17:00']
-        ['Thur,', 'Sat', '20:00', '-', '02:00']
-        ['Mon', '-', 'Wed', '08:00', '-', '17:00']
-        ['Thur,', 'Sat', '20:00', '-', '02:00']
-        ['Mon', '-', 'Wed', '08:00', '-', '17:00']
-        ['Thur,', 'Sat', '20:00', '-', '02:00']
-        ['Mon,', 'Wed,', 'Fri', '08:00', '-', '12:00']
-        ['Tue,', 'Thur', '14:00', '-', '18:00']
-        ['Mon,', 'Wed,', 'Fri', '20:00', '-', '02:00']
-        ['Mon,', 'Wed,', 'Fri', '20:00', '-', '02:00']
-        ['Mon', '-', 'Fri', '08:00', '-', '17:00']
-        ['Mon,', 'Wed,', 'Fri', '20:00', '-', '02:00']
-        ['Fri', '-', 'Sun', '20:00', '-', '02:00']
+        [([1, 3, 5], ['12:00', '08:00']), ([2, 4], ['18:00', '14:00'])]
+        [([1, 2, 3, 4, 5], ['17:00', '08:00'])]
+        [([1, 2, 3, 4, 5], ['17:00', '08:00'])]
+        [([1, 2, 3, 4, 5], ['17:00', '08:00']), ([6, 7], ['12:00', '08:00'])]
+        [([1, 2, 3, 4, 5], ['17:00', '08:00'])]
+        [([1, 2, 3, 4, 5], ['17:00', '08:00']), ([6, 7], ['12:00', '08:00'])]
+        [([1, 2, 3, 4, 5], ['17:00', '08:00']), ([6, 7], ['12:00', '08:00'])]
+        [([5, 6, 7], ['02:00', '20:00'])]
+        [([1, 3, 5], ['12:00', '08:00']), ([2, 4], ['18:00', '14:00'])]
+        [([1, 3, 5], ['12:00', '08:00']), ([2, 4], ['18:00', '14:00'])]
+        [([1, 2, 3, 4, 5], ['17:00', '08:00']), ([6, 7], ['12:00', '08:00'])]
+        [([1, 2, 3], ['17:00', '08:00']), ([4, 6], ['02:00', '20:00'])]
+        [([1, 2, 3], ['17:00', '08:00']), ([4, 6], ['02:00', '20:00'])]
+        [([1, 2, 3], ['17:00', '08:00']), ([4, 6], ['02:00', '20:00'])]
+        [([1, 3, 5], ['12:00', '08:00']), ([2, 4], ['18:00', '14:00'])]
+        [([1, 3, 5], ['02:00', '20:00'])]
+        [([1, 3, 5], ['02:00', '20:00'])]
+        [([1, 2, 3, 4, 5], ['17:00', '08:00'])]
+        [([1, 3, 5], ['02:00', '20:00'])]
+        [([5, 6, 7], ['02:00', '20:00'])]
         """
