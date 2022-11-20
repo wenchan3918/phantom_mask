@@ -16,8 +16,7 @@ class Customer(models.Model):
 
     cash_balance = models.FloatField(verbose_name='Cash balance',
                                      default=0,
-                                     validators=[MinValueValidator(0.0), MaxValueValidator(10000.0)],
-                                     )
+                                     validators=[MinValueValidator(0.0), MaxValueValidator(10000.0)], )
 
     def __str__(self):
         return self.name

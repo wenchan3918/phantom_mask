@@ -98,16 +98,15 @@ class Command(BaseCommand):
                 print(f'history: {history.id}')
 
     def parse_weeks_and_times(self, opening_hours):
-        # 以/符號進行分割 ['Mon', '-', 'Fri', '08:00', '-', '17:00', '/', 'Sat,', 'Sun', '08:00', '-', '12:00']
+        # 用/符號進行分割 Mon, Wed, Fri 08:00 - 12:00 / Tue, Thur 14:00 - 18:00
         for item in opening_hours.split('/'):
             cols = item.strip().split(' ')  # [::-1]
-            # tmp = cols
 
             open_and_close_hours = []  # [open_at, close_at]
             open_and_close_hours.append(cols.pop())
             cols.pop()
             open_and_close_hours.append(cols.pop())
-            # open_and_close_time = sorted(open_and_close_hours)
+            # open_and_close_hours = sorted(open_and_close_hours)
 
             weeks = []  # [1, 2, 3, 4, 5, 6, 7]
             if '-' in cols:  # 解析連續， ['Mon', '-', 'Fri', '08:00', '-', '17:00']

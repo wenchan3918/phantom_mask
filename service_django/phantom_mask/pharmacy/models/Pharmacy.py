@@ -8,12 +8,11 @@ class Pharmacy(models.Model):
 
     name = models.CharField(
         verbose_name="Pharmacy name",
-        max_length=256)
+        max_length=256, )
 
     cash_balance = models.FloatField(verbose_name='Cash balance',
                                      default=0,
-                                     db_index=True,
-                                     )
+                                     db_index=True, )
 
     def __str__(self):
         return self.name

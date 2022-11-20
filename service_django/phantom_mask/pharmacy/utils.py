@@ -9,7 +9,10 @@ def choice2html(choices):
 def dict2html(objects):
     return json.dumps(objects, indent=4, ensure_ascii=False).replace(' ', '&nbsp;').replace('\n', '<br>')
 
-def text2hmtl(text):
+
+def text2html(text):
     return text.replace(' ', '').replace('\n', '<br>')
+
+
 def choice2str(choices):
     return str(dict(choices))

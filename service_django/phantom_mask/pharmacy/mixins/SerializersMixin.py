@@ -3,7 +3,6 @@ class SerializersMixin:
         # Instantiate the superclass normally
         super().__init__(*args, **kwargs)
 
-
         fields = self.context['request'].query_params.get('fields')
         if fields:
             fields = fields.split(',')

@@ -44,12 +44,10 @@ class OpeningHour(models.Model):
                                     choices=WEEK_CHOICES, )
 
     open_at = models.TimeField(verbose_name='Open at',
-                               db_index=True,
-                               )
+                               db_index=True,)
 
     close_at = models.TimeField(verbose_name='Close at',
-                                db_index=True,
-                                )
+                                db_index=True,)
 
     def get_week_display(self):
         return WEEK_DICT[self.week]

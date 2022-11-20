@@ -69,6 +69,7 @@ class PharmacyAdmin(ModelAdmin):
     @admin.display(description='Opening Hours')
     def opening_hours_(self, obj):
         opening_hours = []
+
         for opening_hour in OpeningHour.objects.filter(pharmacy=obj).order_by('week', 'open_at'):
             week = opening_hour.get_week_display()
             open_at = opening_hour.open_at.strftime('%H:%M')
@@ -80,6 +81,7 @@ class PharmacyAdmin(ModelAdmin):
     @admin.display(description='Masks')
     def masks_(self, obj):
         masks = []
+
         for mask in PharmacyMask.objects.filter(pharmacy=obj).order_by('mask__name'):
             masks.append(f'<li>{mask.mask.name} - ${mask.price}</li>')
 

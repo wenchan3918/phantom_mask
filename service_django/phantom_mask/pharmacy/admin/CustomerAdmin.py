@@ -49,14 +49,14 @@ class CustomerAdmin(ModelAdmin):
     def purchase_history_(self, obj):
         history_items = []
         queryset = PurchaseHistory.objects.filter(customer=obj).order_by('-transaction_date')
-        # historys.append(
-        #     f'<li> <b>Total:{queryset.count()}</b></li>')
+
         for history in queryset:
             content = f'''<li>{history.pharmacy_mask.pharmacy.name}, 
                               {history.pharmacy_mask.mask.name}
                               [<b>mask_product_id: {history.pharmacy_mask.id}, price: ${history.transaction_amount}</b>],  
                               {history.transaction_date.strftime("%Y-%m-%d %H:%M:%S")}</li>'''
             history_items.append(content)
+
         return mark_safe(f'<ol>{"".join(history_items)}</ol>')
 
     @admin.display(description='Cash balance')
