@@ -219,7 +219,7 @@ class PharmacyViewSet(ViewSetUtils,
         operation_summary='Buy Mask | 購買口罩',
         operation_description='''
         Test Data:
-        mask_product_id can be found in `/admin/pharmacy/pharmacy/`.
+        mask_product_id can be found in [/admin/pharmacy/pharmacy/](https://mask.langgo.app//admin/pharmacy/pharmacy/).
         
           ```
           {
