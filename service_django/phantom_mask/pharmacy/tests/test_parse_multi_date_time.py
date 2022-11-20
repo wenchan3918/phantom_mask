@@ -10,7 +10,7 @@ def parse_weeks_and_times(opening_hours):
         open_and_close_hours.append(cols.pop())
         cols.pop()
         open_and_close_hours.append(cols.pop())
-        # open_and_close_time = sorted(open_and_close_time)
+        # open_and_close_time = sorted(open_and_close_hours)
 
         weeks = []  # [1, 2, 3, 4, 5, 6, 7]
         if '-' in cols:  # 解析連續， ['Mon', '-', 'Fri', '08:00', '-', '17:00']
@@ -20,7 +20,6 @@ def parse_weeks_and_times(opening_hours):
             for week in cols:
                 weeks.append(SHORT_WEEK_DICT[week.replace(',', '')])
 
-        # print(open_and_close_time, weeks, tmp)
         return weeks, open_and_close_hours
 
 

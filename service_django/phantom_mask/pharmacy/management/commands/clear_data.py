@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from pharmacy.models import Mask, Pharmacy, PharmacyMask, Customer, PurchaseHistory, OpeningHour
 
 
-# python manage.py clear_all_data
+# python manage.py clear_data
 class Command(BaseCommand):
     help = 'Clear the database.'
 

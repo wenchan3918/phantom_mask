@@ -107,7 +107,7 @@ class Command(BaseCommand):
             open_and_close_hours.append(cols.pop())
             cols.pop()
             open_and_close_hours.append(cols.pop())
-            # open_and_close_time = sorted(open_and_close_time)
+            # open_and_close_time = sorted(open_and_close_hours)
 
             weeks = []  # [1, 2, 3, 4, 5, 6, 7]
             if '-' in cols:  # 解析連續， ['Mon', '-', 'Fri', '08:00', '-', '17:00']
