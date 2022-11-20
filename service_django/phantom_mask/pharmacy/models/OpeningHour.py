@@ -16,8 +16,18 @@ WEEK_CHOICES = (
     (WEEK_SATURDAY, 'SATURDAY'),
     (WEEK_SUNDAY, 'SUNDAY'),
 )
+
 WEEK_DICT = dict(WEEK_CHOICES)
-SHORT_WEEK_DICT = {'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thur': 4, 'Fri': 5, 'Sat': 6, 'Sun': 7}
+
+SHORT_WEEK_DICT = {
+    'Mon': 1,
+    'Tue': 2,
+    'Wed': 3,
+    'Thur': 4,
+    'Fri': 5,
+    'Sat': 6,
+    'Sun': 7,
+}
 
 
 class OpeningHour(models.Model):

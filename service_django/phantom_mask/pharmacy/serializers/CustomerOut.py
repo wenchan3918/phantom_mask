@@ -40,8 +40,8 @@ class CustomerOut(FilterMixin,
     @swagger_serializer_method(serializer_or_field=PurchaseHistoryOut(many=True))
     def get_purchase_history(self, obj):
         request = self.context.get('request')
-        start_date = self._get_start_date(request)
-        end_date = self._get_end_date(request)
+        start_date = self.get_start_date(request)
+        end_date = self.get_end_date(request)
 
         queryset = PurchaseHistory.objects.filter(customer_id=self.get_id(obj)).order_by('-transaction_date')
 

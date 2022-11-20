@@ -175,13 +175,13 @@ class PharmacyViewSet(ViewSetUtils,
         Search for pharmacies or masks by name, ranked by relevance to the search term.
         按名稱搜索藥房或口罩，按與搜索詞的相關性排名。 -ing
         """
-        week = self._get_week(request)
-        open_at = self._get_open_at(request)
-        close_at = self._get_close_at(request)
-        name = self._get_name(request)
-        mask_name = self._get_mask_name(request)
-        min_price = self._get_min_price(request)
-        max_price = self._get_max_price(request)
+        week = self.get_week(request)
+        open_at = self.get_open_at(request)
+        close_at = self.get_close_at(request)
+        name = self.get_name(request)
+        mask_name = self.get_mask_name(request)
+        min_price = self.get_min_price(request)
+        max_price = self.get_max_price(request)
 
         # print("====week", week)
 
@@ -345,13 +345,13 @@ class PharmacyViewSet(ViewSetUtils,
         某個日期範圍內交易的口罩總數和美元價值。
         """
 
-        pharmacy_id = self._get_pharmacy_id(request)
-        min_price = self._get_min_price(request)
-        max_price = self._get_max_price(request)
-        start_date = self._get_start_date(request)
-        end_date = self._get_end_date(request)
-        ordering = self._get_ordering(request, 'price')
-        is_desc = self._get_is_desc(request)
+        pharmacy_id = self.get_pharmacy_id(request)
+        min_price = self.get_min_price(request)
+        max_price = self.get_max_price(request)
+        start_date = self.get_start_date(request)
+        end_date = self.get_end_date(request)
+        ordering = self.get_ordering(request, 'price')
+        is_desc = self.get_is_desc(request)
 
         pharmacy_mask_queryset = PharmacyMask.objects
         purchase_history_queryset = PurchaseHistory.objects
@@ -478,11 +478,11 @@ class PharmacyViewSet(ViewSetUtils,
         The top x users by total transaction amount of masks within a date range.
         按某個日期範圍內的口罩總交易金額排名前 x 的顧客。
         """
-        start_date = self._get_start_date(request)
-        end_date = self._get_end_date(request)
-        name = self._get_name(request)
-        ordering = self._get_ordering(request, 'total_transaction_amount')
-        is_desc = self._get_is_desc(request)
+        start_date = self.get_start_date(request)
+        end_date = self.get_end_date(request)
+        name = self.get_name(request)
+        ordering = self.get_ordering(request, 'total_transaction_amount')
+        is_desc = self.get_is_desc(request)
 
         queryset = Customer.objects.filter()
         purchase_history_queryset = PurchaseHistory.objects.filter(customer=OuterRef('pk'))

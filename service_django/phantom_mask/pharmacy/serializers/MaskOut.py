@@ -51,9 +51,9 @@ class MaskOut(FilterMixin,
 
     def _get_pharmacy_mask_queryset(self, mask):
         request = self.context.get('request')
-        pharmacy_id = self._get_pharmacy_id(request)
-        min_price = self._get_min_price(request)
-        max_price = self._get_max_price(request)
+        pharmacy_id = self.get_pharmacy_id(request)
+        min_price = self.get_min_price(request)
+        max_price = self.get_max_price(request)
         queryset = PharmacyMask.objects.filter(mask=mask).order_by('price')
 
         if pharmacy_id:
@@ -69,8 +69,8 @@ class MaskOut(FilterMixin,
 
     def _get_purchase_history_queryset(self, mask):
         request = self.context.get('request')
-        start_date = self._get_start_date(request)
-        end_date = self._get_end_date(request)
+        start_date = self.get_start_date(request)
+        end_date = self.get_end_date(request)
 
         queryset = PurchaseHistory.objects.filter(pharmacy_mask__mask=mask)
 

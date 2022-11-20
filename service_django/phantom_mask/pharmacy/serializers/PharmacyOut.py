@@ -31,9 +31,9 @@ class PharmacyOut(FilterMixin,
     @swagger_serializer_method(serializer_or_field=OpeningHourOut(many=True))
     def get_opening_hours(self, obj):
         request = self.context.get('request')
-        week = self._get_week(request)
-        open_at = self._get_open_at(request)
-        close_at = self._get_close_at(request)
+        week = self.get_week(request)
+        open_at = self.get_open_at(request)
+        close_at = self.get_close_at(request)
 
         queryset = OpeningHour.objects.filter(pharmacy=obj)
 
@@ -51,10 +51,10 @@ class PharmacyOut(FilterMixin,
     @swagger_serializer_method(serializer_or_field=MaskProductOut(many=True))
     def get_mask_products(self, obj):
         request = self.context.get('request')
-        mask_name = self._get_mask_name(request)
-        min_price = self._get_min_price(request)
-        max_price = self._get_max_price(request)
-        is_desc = self._get_is_desc(request)
+        mask_name = self.get_mask_name(request)
+        min_price = self.get_min_price(request)
+        max_price = self.get_max_price(request)
+        is_desc = self.get_is_desc(request)
 
         queryset = PharmacyMask.objects.filter(pharmacy=obj)
 
@@ -75,8 +75,8 @@ class PharmacyOut(FilterMixin,
     @swagger_serializer_method(serializer_or_field=PurchaseHistoryOut(many=True))
     def get_sales_history(self, obj):
         request = self.context.get('request')
-        ordering = self._get_ordering(request, 'price')
-        is_desc = self._get_is_desc(request)
+        ordering = self.get_ordering(request, 'price')
+        is_desc = self.get_is_desc(request)
 
         queryset = PurchaseHistory.objects.filter(pharmacy_mask__pharmacy=obj)
 
