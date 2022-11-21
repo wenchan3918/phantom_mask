@@ -1,8 +1,16 @@
-SHORT_WEEK_DICT = {'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thur': 4, 'Fri': 5, 'Sat': 6, 'Sun': 7}
+SHORT_WEEK_DICT = {
+    'Mon': 1,
+    'Tue': 2,
+    'Wed': 3,
+    'Thur': 4,
+    'Fri': 5,
+    'Sat': 6,
+    'Sun': 7,
+}
 
 
 def parse_weeks_and_times(opening_hours):
-    # 以/符號進行分割 ['Mon', '-', 'Fri', '08:00', '-', '17:00', '/', 'Sat,', 'Sun', '08:00', '-', '12:00']
+    # 以/符號進行分割 Mon, Wed, Fri 08:00 - 12:00 / Tue, Thur 14:00 - 18:00
     # return opening_hours
     results = []
     for item in opening_hours.split('/'):
