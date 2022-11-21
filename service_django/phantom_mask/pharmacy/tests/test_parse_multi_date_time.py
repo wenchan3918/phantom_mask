@@ -16,10 +16,10 @@ def parse_weeks_and_times(opening_hours):
         # open_and_close_time = sorted(open_and_close_hours)
 
         weeks = []  # [1, 2, 3, 4, 5, 6, 7]
-        if '-' in cols:  # 解析連續， ['Mon', '-', 'Fri', '08:00', '-', '17:00']
+        if '-' in cols:  # 解析區段星期， ['Mon', '-', 'Fri']
             for week_id in range(SHORT_WEEK_DICT[cols[0]], 1 + SHORT_WEEK_DICT[cols[-1]]):
                 weeks.append(week_id)
-        else:  # 解析單一星期， ['Mon,', 'Wed,', 'Fri', '08:00', '-', '12:00']
+        else:  # 解析單一星期， ['Mon,', 'Wed,', 'Fri']
             for week in cols:
                 weeks.append(SHORT_WEEK_DICT[week.replace(',', '')])
 
