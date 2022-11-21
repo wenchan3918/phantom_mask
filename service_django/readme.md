@@ -17,4 +17,4 @@ python manage.py createsuperuser
 python manage.py import_data
 
 #clean all data in db
-python manage.py clean_data
+python manage.py clear_data

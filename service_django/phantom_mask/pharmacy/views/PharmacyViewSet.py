@@ -37,13 +37,13 @@ class PharmacyViewSet(ViewSetUtils,
     def list(self, request, *args, **kwargs):
         """
         List all pharmacies open at a specific time and on a day of the week if requested.
-        如果需要，列出在特定時間和一周中的某一天營業的所有藥房。 -ok
+        如果需要，列出在特定時間和一周中的某一天營業的所有藥房。
 
         List all pharmacies with more or less than x mask products within a price range.
-        列出價格範圍內口罩產品多於或少於 x 件的所有藥店。-ok
+        列出價格範圍內口罩產品多於或少於 x 件的所有藥店。
 
         Search for pharmacies or masks by name, ranked by relevance to the search term.
-        按名稱搜索藥房或口罩，按與搜索詞的相關性排名。 -ing
+        按名稱搜索藥房或口罩，按與搜索詞的相關性排名。
         """
         week = self.get_week(request)
         open_at = self.get_open_at(request)
@@ -83,6 +83,7 @@ class PharmacyViewSet(ViewSetUtils,
         if mask_name:
             pharmacy_mask_queryset = pharmacy_mask_queryset.filter(mask__name__contains=mask_name)
             queryset = queryset.filter(id__in=pharmacy_mask_queryset.values('pharmacy_id'))
+            # TODO 口罩名稱搜尋有實作但無法達成以關聯性做排序
 
         # 以商店名稱作為搜索詞進行搜尋，並的相關性排名。
         if name:
