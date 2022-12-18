@@ -61,7 +61,6 @@ services:
     env_file: .env
     depends_on:
       - django
-      - goaccess
     volumes:
       - ./log:/log
       - ./service_nginx/nginx.conf:/etc/nginx/nginx.conf
