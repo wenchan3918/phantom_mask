@@ -2,7 +2,7 @@
 
 ## Add upstream to conf-dev.tpl/conf-prod.tpl
 path in service_nginx/conf.d/conf-dev.tpl and service_nginx/conf.d/conf-prod.tpl
-```
+
 ```shell
 upstream ws_goaccess {
     server goaccess:7889;
@@ -30,4 +30,4 @@ location /goaccess {
 
 
 # TODO
-- [ ] Authentication login
+- [ ] Only admin can view
