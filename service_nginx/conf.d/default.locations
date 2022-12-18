@@ -14,8 +14,8 @@ location ~ ^/static/(.*)$ {
 }
 
 location /goaccess {
-    set $upstream_goaccess goaccess;
-    proxy_pass http://$upstream_goaccess:7889/;
+    set $upstream_goaccess ws_goaccess;
+    proxy_pass http://$upstream_goaccess;
 
     proxy_connect_timeout 1d;
     proxy_send_timeout 1d;
