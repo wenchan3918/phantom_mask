@@ -1,7 +1,4 @@
- map $http_upgrade $connection_upgrade {
-        default upgrade;
-        '' close;
-    }
+
 
 upstream ws_goaccess {
     server goaccess:7889;
