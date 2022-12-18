@@ -15,5 +15,7 @@ services:
       - "443:443"
 
   goaccess:
+    ports:
+      - "7889:7889"
     expose:
       - 7889
