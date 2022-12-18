@@ -15,4 +15,5 @@ ls -al
 bash run.sh prod restart django
 #bash run.sh prod restart db
 bash run.sh prod restart nginx
+bash run.sh prod restart goaccess
 EOF
