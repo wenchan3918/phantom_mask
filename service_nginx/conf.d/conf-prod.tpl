@@ -1,3 +1,4 @@
+
 upstream ws_goaccess {
     server goaccess:7889;
 }
