@@ -27,3 +27,7 @@ location /goaccess {
 }
 
 ```
+
+
+# TODO
+- [ ] Authentication login
