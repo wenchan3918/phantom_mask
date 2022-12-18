@@ -1,3 +1,6 @@
+upstream ws_goaccess {
+    server goaccess:7889;
+}
 
 
 server {
@@ -22,6 +25,3 @@ server {
     include /etc/nginx/conf.d/default.locations;
 }
 
-upstream ws_goaccess {
-    server goaccess:7889;
-}
