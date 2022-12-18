@@ -4,7 +4,7 @@
     }
 
 upstream ws_goaccess {
-    server 172.19.0.0.3:7889;
+    server goaccess:7889;
 }
 
 
