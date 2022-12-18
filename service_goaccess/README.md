@@ -1,4 +1,4 @@
-#Configuration
+# Configuration
 
 ## Add Service to docker-compose.yml
 Path in docker-compose.yml
