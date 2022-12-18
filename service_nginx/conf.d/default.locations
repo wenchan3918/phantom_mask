@@ -43,7 +43,7 @@ location /silk/ {
     proxy_set_header Host $host;
 }
 
-location ^~ /goaccess {
+location /goaccess {
     set $upstream_goaccess goaccess;
     proxy_pass http://$upstream_goaccess:7889/;
 
