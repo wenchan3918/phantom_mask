@@ -2,6 +2,7 @@ root        /usr/share/nginx/html/;
 index       index.html;
 
 
+
 location ~ ^/uploads/(.*)$ {
     alias /usr/share/nginx/html/uploads/$1;
     autoindex off;
@@ -12,15 +13,29 @@ location ~ ^/static/(.*)$ {
     autoindex off;
 }
 
+location /goaccess {
+    proxy_pass http://goaccess:7889;
+    proxy_connect_timeout 1d;
+    proxy_send_timeout 1d;
+    proxy_read_timeout 1d;
+    proxy_http_version 1.1;
+
+    proxy_set_header  X-Forwarded-Proto $scheme;
+    proxy_set_header Host $host;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
+
+
 location /admin {
     proxy_pass http://django:8080;
-    proxy_set_header  X-Forwarded-Proto   $scheme;
+    proxy_set_header  X-Forwarded-Proto $scheme;
     proxy_set_header Host $host;
 }
 
 location /swagger/ {
     proxy_pass http://django:8080;
-    proxy_set_header  X-Forwarded-Proto   $scheme;
+    proxy_set_header  X-Forwarded-Proto $scheme;
     proxy_set_header Host $host;
 }
 
@@ -31,7 +46,7 @@ location /doc/ {
 
 location /api/ {
     proxy_pass http://django:8080;
-    proxy_set_header  X-Forwarded-Proto   $scheme;
+    proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header Host $host;
     proxy_set_header X-real-ip $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -43,15 +58,6 @@ location /silk/ {
     proxy_set_header Host $host;
 }
 
-location ~ ^/goaccess/ {
-    proxy_pass http://goaccess:7889;
-    proxy_connect_timeout 1d;
-    proxy_send_timeout 1d;
-    proxy_read_timeout 1d;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "Upgrade";
-}
 
 
 location  / {
