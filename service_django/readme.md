@@ -1,4 +1,4 @@
-#enter django container
+ #enter django container
 docker exec -it django /bin/bash
 
 python manage.py makemigrations

@@ -7,3 +7,9 @@ services:
     ports:
       - "5432:5432"
 
+  goaccess:
+    expose:
+      - 7889
+    ports:
+      - "7889:7889"
+
