@@ -17,5 +17,6 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'silk',
 
-    'pharmacy',
+    'pharmacy',  # kdam interview
+    'uinterview',  # ureliance interview
 ]

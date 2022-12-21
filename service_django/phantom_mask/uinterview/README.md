@@ -1,0 +1,1 @@
+# 如果客户的deliver_date和order_date相同，則該訂單為real-time order，否則都為plan order 查 詢上述表格中real-time order所佔的百分比，四捨五入到小數點後2位。
