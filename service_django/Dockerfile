@@ -1,4 +1,5 @@
-FROM python:3.9-slim-buster
+#FROM python:3.9-slim-buster
+FROM python:3.11-slim-buster
 
 RUN set -ex && mkdir /app
 WORKDIR /app

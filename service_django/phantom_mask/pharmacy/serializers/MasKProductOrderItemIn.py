@@ -1,8 +1,8 @@
 # import logging
-from aioredis.commands import transaction
+
 from rest_framework import serializers
 
-from pharmacy.models import Mask, PharmacyMask, Customer
+from pharmacy.models import PharmacyMask
 
 
 class MasKProductOrderItemIn(serializers.ModelSerializer):
@@ -24,4 +24,3 @@ class MasKProductOrderItemIn(serializers.ModelSerializer):
             # print("==self.phantom_mask",self.phantom_mask)
         except:
             raise serializers.ValidationError('mask_product_id not exists.')
-

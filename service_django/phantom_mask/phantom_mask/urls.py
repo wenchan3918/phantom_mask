@@ -22,7 +22,7 @@ from rest_framework import permissions
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 
 from phantom_mask.AdminSite import admin_site
-from django.conf.urls import url
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -48,5 +48,5 @@ urlpatterns = [
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui', ),
     re_path(r'^doc/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc-ui'),
 
-    url(r'^silk/', include('silk.urls', namespace='silk')),
+    path(r'silk/', include('silk.urls', namespace='silk')),
 ]
