@@ -19,4 +19,6 @@ INSTALLED_APPS = [
 
     'pharmacy',  # kdam interview
     'uinterview',  # ureliance interview
+
+    'mock',  # mock data test api
 ]

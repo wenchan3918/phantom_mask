@@ -11,6 +11,7 @@ coreschema==0.0.4
 Django==4.1.4
 django-filter==22.1
 django-light==0.1.0.post3
+django-mock-queries==2.1.7
 django-rest-auth==0.9.5
 django-rest-swagger==2.2.0
 django-silk==5.0.2
@@ -29,6 +30,8 @@ itypes==1.2.0
 Jinja2==3.1.2
 Markdown==3.4.1
 MarkupSafe==2.1.1
+mock==5.0.0
+model-bakery==1.9.0
 numpy==1.24.1
 openai==0.25.0
 openapi-codec==1.3.2
