@@ -10,7 +10,7 @@ from phantom_mask.ViewSetUtils import ViewSetUtils
 from pharmacy.mixins.FilterMixin import FilterMixin
 
 
-class MackAccountViewSet(ViewSetUtils,
+class MockAccountViewSet(ViewSetUtils,
                          FilterMixin,
                          viewsets.GenericViewSet):
     permission_classes = (AllowAny,)

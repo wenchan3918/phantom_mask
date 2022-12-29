@@ -1,1 +1,1 @@
-from .MackAccountViewSet import MackAccountViewSet
+from .MockAccountViewSet import MockAccountViewSet
