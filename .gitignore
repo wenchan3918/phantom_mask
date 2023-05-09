@@ -3,4 +3,4 @@
 log
 .env
 **/uploads/
-
+.DS_Store

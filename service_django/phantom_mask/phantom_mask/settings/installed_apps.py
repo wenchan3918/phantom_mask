@@ -21,4 +21,7 @@ INSTALLED_APPS = [
     'uinterview',  # ureliance interview
 
     'mock',  # mock data test api
+
+    # 英文單字庫
+    'enword',
 ]
